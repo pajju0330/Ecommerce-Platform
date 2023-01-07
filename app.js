@@ -8,17 +8,20 @@ const connectDB = require('./db/connect');
 const {isLoggedIn} = require('./middlewares/authentication')
 const errorHandlerMiddleware = require('./middlewares/error-handler');
 
+
 //routes
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 
-
+//middlewares
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET))
 app.use(bodyParser.urlencoded({extended:false}));
 app.use('/api/v1/auth',authRoutes);
 app.use('/api/v1/products',isLoggedIn,productRoutes);
+app.use('/api/v1/users',userRoutes);
 app.use(errorHandlerMiddleware)
 
 

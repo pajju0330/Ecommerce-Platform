@@ -7,6 +7,9 @@ const AuthSchema = new mongoose.Schema({
         required:true,
         validate: [validator.isEmail, 'Please provide a valid email']
     },
+    name:{
+        type:String,
+    },
     password:{
         type:String,
         required:true,

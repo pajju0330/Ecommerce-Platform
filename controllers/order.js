@@ -23,7 +23,6 @@ const createOrder = async(req,res) => {
         subTotal += item.quantity*price;
     }
     const total = shippingFee + subTotal;
-    const paymentIntent = awai
 }
 
 
