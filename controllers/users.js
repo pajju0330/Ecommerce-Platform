@@ -3,6 +3,33 @@ const customError=require('../errors');
 const {StatusCodes}=require('http-status-codes');
 
 
+//multer
+const multer = require('multer');  
+
+const multerStorage = multer.diskStorage({
+    destination:(req,file,cb) => {
+        cb(null,'./uploads/');
+    },
+    filename:(req,file,cb) =>{
+        const ext = file.mimetype.split('/')[1];
+        cb(null,`user-${req.user._id}-${Date.now()}.${ext}`);
+    }
+});
+const multerFilter = (req,file,cb) => {
+    if(file.mimetype.startsWith('image')){
+        cb(null,true);
+    }
+    else{
+        cb(null,);
+    }
+}
+const upload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter
+});
+
+const uploadSettings = upload.single('image');
+
 //Getting all Users
 const getAllUsers = async(req,res)=>{
     const user=await Auth.find({role:'user'}).select('-password');
@@ -59,4 +86,16 @@ const deleteUser = async(req,res)=>{
 }
 
 
-module.exports = {getAllUsers,getSingleUser,updateUserPassword,updateName,updateEmail,deleteUser};
+//adding image
+
+const addImage = async(req,res)=>{
+    const img = req.file;
+    if(!img) throw new customError.BadRequestError('PLease input a file to be uploaded');
+    const user = await Auth.findOne({_id:req.user._id});
+    user.img = img.filename;
+    await user.save();
+    res.status(StatusCodes.OK).json({message: 'Uploaded the photo'});
+
+}
+
+module.exports = {getAllUsers,getSingleUser,updateUserPassword,updateName,updateEmail,deleteUser,addImage,uploadSettings};

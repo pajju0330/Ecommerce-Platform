@@ -37,7 +37,6 @@ const updateProduct = async(req,res) => {
 }
 
 
-
 //delete a product
 const deleteProduct = async(req,res) => {
     const  {id: productId} = req.params;

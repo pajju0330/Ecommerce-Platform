@@ -13,6 +13,7 @@ const errorHandlerMiddleware = require('./middlewares/error-handler');
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 
 //middlewares
@@ -22,9 +23,11 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use('/api/v1/auth',authRoutes);
 app.use('/api/v1/products',isLoggedIn,productRoutes);
 app.use('/api/v1/users',userRoutes);
+app.use('/api/v1/orders',orderRoutes);
 app.use(errorHandlerMiddleware)
 
 
+//Start-up code
 const start = async(url) => {
     try{
         await connectDB(url);

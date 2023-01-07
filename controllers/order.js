@@ -23,6 +23,39 @@ const createOrder = async(req,res) => {
         subTotal += item.quantity*price;
     }
     const total = shippingFee + subTotal;
+    const order = await Order.create({
+        orderItems,
+        total,
+        shippingFee,
+        user: req.user.userId,
+    });
+    res.status(StatusCodes.CREATED).json({ order });
+}
+
+const getAllOrders = async(req,res) =>{
+    const order = await Order.find({});
+    res.status(StatusCodes.OK).json({length:order.length, order });
 }
 
 
+const getSingleOrder = async(req,res) =>{
+    const id = req.params.id;
+    const order = await Order.findOne({_id:id});
+    if(!order) throw new customError.NotFoundError(`No order with id ${id}`);
+    res.status(StatusCodes.OK).json({ order });
+}
+
+
+const getMyOrders = async(req,res) =>{
+    const order = await Order.findOne({_id:req.user._id});
+    res.status(StatusCodes.OK).json({length:order.length, order });
+}
+
+
+const cancelOrder = async(req,res) =>{
+    const order = await Order.deleteMany({});
+    req.status(StatusCodes.OK).json({message: 'Cancelled all the order'});
+}
+
+
+module.exports = { getAllOrders,getMyOrders,getSingleOrder,cancelOrder,createOrder };
