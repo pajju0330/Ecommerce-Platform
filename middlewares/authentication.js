@@ -1,7 +1,6 @@
 const customError = require('../errors');
 const {isValidToken} = require('../Utils/createToken');
 const Auth = require('../models/Auth');
-const { default: mongoose } = require('mongoose');
 
 
 const isLoggedIn = async(req,res,next) =>{
@@ -19,9 +18,8 @@ const isLoggedIn = async(req,res,next) =>{
 
 const isAuthroized = (...roles) =>{
     return (req,res,next)=>{
-        console.log();
         if(!roles.includes(req.user.role)){
-            throw new CustomError.UnauthorizedError('Unauthorized to access this route');
+            throw new customError.UnauthorizedError('Unauthorized to access this route');
         };
         next();
     };
