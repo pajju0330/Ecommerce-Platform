@@ -5,9 +5,9 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 3000;
 const connectDB = require('./db/connect');
+const cors = require('cors');
 const {isLoggedIn} = require('./middlewares/authentication')
 const errorHandlerMiddleware = require('./middlewares/error-handler');
-
 
 //routes
 const authRoutes = require('./routes/authRoutes');
@@ -18,6 +18,7 @@ const orderRoutes = require('./routes/orderRoutes');
 
 //middlewares
 app.use(express.json());
+app.use(cors());
 app.use(cookieParser(process.env.JWT_SECRET))
 app.use(bodyParser.urlencoded({extended:false}));
 app.use('/api/v1/auth',authRoutes);
