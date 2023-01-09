@@ -26,6 +26,9 @@ app.use('/api/v1/users',userRoutes);
 app.use('/api/v1/orders',orderRoutes);
 app.use(errorHandlerMiddleware)
 
+app.all('*' , (req,res)=>{
+    res.status(404).send('NOT FOUND');
+})
 
 //Start-up code
 const start = async(url) => {

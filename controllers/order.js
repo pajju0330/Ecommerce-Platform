@@ -1,9 +1,11 @@
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const customError = require('../errors');
+const catchAsync = require('../Utils/catchAsync')
 const {StatusCodes} = require('http-status-codes');
 
-const createOrder = async(req,res) => {
+
+const createOrder = catchAsync(async(req,res) => {
     const { items: cartItems, shippingFee} = req.body;
     if(!cartItems || cartItems.length < 1) throw new customError.BadRequestError('No items to place order');
     if(!shippingFee) throw new customError.BadRequestError('Please provide shipping fee');
@@ -30,33 +32,33 @@ const createOrder = async(req,res) => {
         user: req.user._id,
     });
     res.status(StatusCodes.CREATED).json({ order });
-}
+});
 
-const getAllOrders = async(req,res) =>{
+const getAllOrders = catchAsync(async(req,res) =>{
     const order = await Order.find({});
     res.status(StatusCodes.OK).json({length:order.length, order });
-}
+});
 
 
-const getSingleOrder = async(req,res) =>{
+const getSingleOrder = catchAsync(async(req,res) =>{
     const id = req.params.id;
     const order = await Order.findOne({_id:id});
     if(!order) throw new customError.NotFoundError(`No order with id ${id}`);
     res.status(StatusCodes.OK).json({ order });
-}
+});
 
 
-const getMyOrders = async(req,res) =>{
+const getMyOrders = catchAsync(async(req,res) =>{
     const order = await Order.findOne({user:req.user});
     if(!order) throw new customError.NotFoundError('No orders for this user');
     res.status(StatusCodes.OK).json({length:order.orderedItems.length, order });
-}
+});
 
 
-const cancelOrder = async(req,res) =>{
+const cancelOrder = catchAsync(async(req,res) =>{
     const order = await Order.deleteMany({});
     req.status(StatusCodes.OK).json({message: 'Cancelled all the order'});
-}
+});
 
 
 module.exports = { getAllOrders,getMyOrders,getSingleOrder,cancelOrder,createOrder };
